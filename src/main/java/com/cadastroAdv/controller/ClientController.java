@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/cli/cadastro")
+@RequestMapping("/cadastro")
 public class ClientController {
 
     @Autowired
@@ -24,41 +24,41 @@ public class ClientController {
 
 
     @GetMapping
-    public ResponseEntity<List> listarTodos (){
+    public ResponseEntity<List> listarTodos() {
         return new ResponseEntity(clientRepository.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/buscar/{cpf}")
-    public ResponseEntity<?> buscarPessoaPorCPF(@PathVariable String cpf) {
+
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<ClientEntity> buscarPorId(@PathVariable Long id) {
+        return new ResponseEntity(clientRepository.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/teste/{cpf}")
+    public ResponseEntity<ClientEntity> buscarPorCPF(@PathVariable String cpf) {
         Optional<ClientEntity> clientExist = clientRepository.findByCpf(cpf);
-        if(!clientExist.isPresent()){
+        if (!clientExist.isPresent()) {
             throw new EntityNotFoundException("Pessoa não encontrada.");
         } else {
             ClientEntity client = clientExist.get();
             return new ResponseEntity<>(client, HttpStatus.OK);
         }
-
-
     }
 
-    @GetMapping ("/buscar/{id}")
-    public ResponseEntity<ClientEntity> listarPorId (@PathVariable Long id){
-        return new ResponseEntity(clientRepository.findById(id),HttpStatus.OK);
-    }
 
     @PostMapping
-    public ResponseEntity<ClientEntity> cadastrarCliente(@RequestBody ClientDTO clientDTO){
+    public ResponseEntity<ClientEntity> cadastrarCliente(@RequestBody ClientDTO clientDTO) {
         ClientEntity newClient = new ClientEntity();
-        BeanUtils.copyProperties(clientDTO , newClient);
+        BeanUtils.copyProperties(clientDTO, newClient);
         clientRepository.save(newClient);
-        return new ResponseEntity<>(newClient,HttpStatus.OK);
+        return new ResponseEntity<>(newClient, HttpStatus.OK);
 
     }
 
     @PostMapping("/editar/{cpf}")
-    public ResponseEntity<?> editarPessoaPorCPF(@PathVariable String cpf,@RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<?> editarPessoaPorCPF(@PathVariable String cpf, @RequestBody ClientDTO clientDTO) {
         Optional<ClientEntity> clientExist = clientRepository.findByCpf(cpf);
-        if(!clientExist.isPresent()){
+        if (!clientExist.isPresent()) {
             throw new EntityNotFoundException("Pessoa não encontrada.");
         } else {
             ClientEntity client = clientExist.get();
@@ -67,8 +67,9 @@ public class ClientController {
             return new ResponseEntity<>(client, HttpStatus.OK);
         }
     }
+
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<?> deletarPorId (@PathVariable Long id){
+    public ResponseEntity<?> deletarPorId(@PathVariable Long id) {
         clientRepository.deleteById(id);
         return new ResponseEntity(HttpStatus.OK);
     }
