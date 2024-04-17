@@ -13,8 +13,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClientEntity {
-
-
     @Id
     @GeneratedValue ( strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,6 +40,4 @@ public class ClientEntity {
     private String cep;
 
     private String obs;
-
-
 }
