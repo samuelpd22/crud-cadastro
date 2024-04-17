@@ -27,7 +27,11 @@ public class ClientEntity {
 
     private String cli;
 
+    private String planoEc;
+
     private String processo;
+
+    private String datNascimento;
 
     private String email;
 

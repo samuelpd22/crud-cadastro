@@ -33,6 +33,16 @@ public class ClientController {
     public ResponseEntity<ClientEntity> buscarPorId(@PathVariable Long id) {
         return new ResponseEntity(clientRepository.findById(id), HttpStatus.OK);
     }
+    @GetMapping("/buscarPorNome")
+    public ResponseEntity<List<ClientEntity>> buscarClientesPorNome(@RequestParam("nome") String nome) {
+        List<ClientEntity> clientes = clientRepository.findByNomeCompletoIgnoreCaseContaining(nome);
+
+        if (clientes.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Retorna um código 204 se não houver clientes encontrados
+        } else {
+            return ResponseEntity.ok(clientes); // Retorna a lista de clientes encontrados com um código 200
+        }
+    }
 
     @GetMapping("/teste/{cpf}")
     public ResponseEntity<ClientEntity> buscarPorCPF(@PathVariable String cpf) {
