@@ -58,10 +58,21 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientEntity> cadastrarCliente(@RequestBody ClientDTO clientDTO) {
-        ClientEntity newClient = new ClientEntity();
+        Optional<ClientEntity> clientExist = clientRepository.findByCpf(clientDTO.cpf());
+        if(!clientExist.isPresent()){
+            ClientEntity clientEntity = new ClientEntity();
+            BeanUtils.copyProperties(clientDTO, clientEntity);
+            clientRepository.save(clientEntity);
+            return new ResponseEntity<>(clientEntity, HttpStatus.OK);
+        } else {
+            throw new RuntimeException("Cliente já cadastrado no banco de dados");
+
+        }
+
+        /*ClientEntity newClient = new ClientEntity();
         BeanUtils.copyProperties(clientDTO, newClient);
         clientRepository.save(newClient);
-        return new ResponseEntity<>(newClient, HttpStatus.OK);
+        return new ResponseEntity<>(newClient, HttpStatus.OK);*/
 
     }
 
